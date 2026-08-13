@@ -4,14 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Numan Textiles - Admin</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 body{margin:0;font-family:Inter,Arial,sans-serif;background:linear-gradient(135deg,#eef4fb,#f8fbff);color:#243247;line-height:1.5}.wrap{max-width:1180px;margin:auto;padding:28px 18px 60px}
 h1,h2,h3{color:#071a33}.panel{background:rgba(255,255,255,.96);padding:24px;border-radius:18px;margin-bottom:20px;box-shadow:0 12px 35px rgba(9,30,66,.08);border:1px solid #e4ebf4}
 .tabs{display:flex;gap:8px;flex-wrap:wrap}.tab{border:0;padding:12px 16px;border-radius:10px;background:#edf4fc;color:#071a33;cursor:pointer;font-weight:800}.tab.active{background:linear-gradient(135deg,#071a33,#0b63ce);color:#fff;box-shadow:0 7px 18px rgba(11,99,206,.22)}.page{display:none}.page.active{display:block}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.full{grid-column:1/-1}label{font-weight:bold;font-size:13px;display:block;margin-bottom:5px}input,textarea{width:100%;padding:11px;border:1px solid #ccd7e5;border-radius:7px;box-sizing:border-box}textarea{min-height:90px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.full{grid-column:1/-1}label{font-weight:bold;font-size:13px;display:block;margin-bottom:5px}input,textarea,select{width:100%;padding:11px;border:1px solid #ccd7e5;border-radius:7px;box-sizing:border-box}textarea{min-height:90px}
 button{border:0;border-radius:10px;padding:11px 16px;background:#0b63ce;color:#fff;font-weight:800;cursor:pointer;margin:6px 4px 0 0}.danger{background:#d33}.green{background:#18a85b}.gray{background:#68778d}
 .product{display:flex;justify-content:space-between;gap:15px;align-items:center;padding:12px 0;border-bottom:1px solid #e4eaf2}.product img{width:70px;height:55px;object-fit:cover;border-radius:6px}.info{display:flex;align-items:center;gap:12px}.note{font-size:13px;color:#68778d}.login{max-width:400px;margin:60px auto}.color{display:flex;align-items:center;gap:10px}.color input{width:65px;height:42px;padding:2px}
 .preview{max-width:100%;max-height:200px;border-radius:10px;margin-top:10px;display:none}.promo-item{display:flex;justify-content:space-between;gap:15px;align-items:center;padding:12px 0;border-bottom:1px solid #e4eaf2}.promo-thumb{width:110px;height:65px;object-fit:cover;border-radius:8px}.promo-info{display:flex;gap:12px;align-items:center}.design-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.design-card{border:2px solid #e4eaf2;border-radius:12px;padding:14px;cursor:pointer;background:#fff}.design-card:hover{border-color:#0b63ce}.design-card.selected{border-color:#0b63ce;box-shadow:0 0 0 3px #0b63ce22}.design-demo{height:55px;border-radius:8px;margin-bottom:8px}.d1{background:linear-gradient(135deg,#071a33,#0b63ce)}.d2{background:linear-gradient(135deg,#111,#8b6b2d)}.d3{background:linear-gradient(135deg,#071b18,#12a66b)}.d4{background:linear-gradient(135deg,#f5f5f5,#d8dee8);border:1px solid #ccd7e5}.d5{background:linear-gradient(135deg,#161616,#444)}
+.status{padding:10px 12px;border-radius:8px;background:#eef7ff;margin-top:12px;font-size:13px}.status.error{background:#fff0f0;color:#a11}.status.ok{background:#effbf3;color:#176b38}
 @media(max-width:700px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.product,.promo-item{align-items:flex-start;flex-direction:column}.design-grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -22,12 +24,14 @@ button{border:0;border-radius:10px;padding:11px 16px;background:#0b63ce;color:#f
 <input id="password" type="password" placeholder="Admin password">
 <p id="err" style="color:#d33;display:none">Incorrect password.</p>
 <button onclick="login()">Login</button>
+<div id="connectionStatus" class="status">Connecting to online database...</div>
 </div>
 
 <div id="app" class="wrap" style="display:none">
 <div class="panel">
 <h1>⚙ Admin Panel</h1>
-<p class="note">Changes are saved in this browser. The public index.html reads the same saved data.</p>
+<p class="note">Products, settings and promotions are saved to your Supabase online database. Images are uploaded to Supabase Storage.</p>
+<div id="appStatus" class="status">Online database connected.</div>
 <div class="tabs">
 <button class="tab active" onclick="tab('products',this)">Products</button>
 <button class="tab" onclick="tab('home',this)">Home</button>
@@ -54,6 +58,7 @@ button{border:0;border-radius:10px;padding:11px 16px;background:#0b63ce;color:#f
 <div class="full"><label>Hero Badge</label><input id="heroBadge"></div><div class="full"><label>Hero Heading</label><input id="heroTitle"></div>
 <div class="full"><label>Hero Description</label><textarea id="heroText"></textarea></div>
 <div><label>Button 1</label><input id="heroButton1"></div><div><label>Button 2</label><input id="heroButton2"></div>
+<div class="full"><label>Logo picture — select from your phone/gallery</label><input id="logo" type="file" accept="image/jpeg,image/png,image/webp"><img id="logoPreview" class="preview"></div>
 </div><button onclick="saveHome()">Save Home</button></div>
 
 <div id="about" class="panel page"><h2>About / Bio</h2><div class="grid">
@@ -73,7 +78,7 @@ button{border:0;border-radius:10px;padding:11px 16px;background:#0b63ce;color:#f
 <div class="color"><label>Navy</label><input id="navy" type="color"></div><div class="color"><label>Blue</label><input id="blue" type="color"></div>
 <div class="color"><label>Gold</label><input id="gold" type="color"></div><div class="color"><label>Background</label><input id="light" type="color"></div>
 <div class="color"><label>Text</label><input id="text" type="color"></div><div class="color"><label>Muted</label><input id="muted" type="color"></div>
-<div class="full"><label>Logo picture — select from your phone gallery</label><input id="logoImage" type="file" accept="image/*"><img id="logoPreview" class="preview"></div><div class="full"><label>Hero background picture — select from your phone gallery</label><input id="bg" type="file" accept="image/*"><img id="preview" class="preview"></div>
+<div class="full"><label>Hero background picture — select from your phone gallery</label><input id="bg" type="file" accept="image/jpeg,image/png,image/webp"><img id="preview" class="preview"></div>
 <div class="full"><label>Website Design</label><p class="note">This changes the layout/style feel, not only the colours.</p><div class="design-grid">
 <div class="design-card" data-design="classic" onclick="chooseDesign('classic')"><div class="design-demo d1"></div><b>Classic Business</b><div class="note">Professional blue layout</div></div>
 <div class="design-card" data-design="luxury" onclick="chooseDesign('luxury')"><div class="design-demo d2"></div><b>Luxury</b><div class="note">Premium gold and dark style</div></div>
@@ -89,7 +94,7 @@ button{border:0;border-radius:10px;padding:11px 16px;background:#0b63ce;color:#f
 <div><label>Promotion Title</label><input id="promoTitle" placeholder="Summer Sale"></div>
 <div><label>Button/Link URL (optional)</label><input id="promoLink" placeholder="https://example.com or #contact"></div>
 <div><label>Display Position</label><select id="promoPosition"><option value="top">Top — under navigation</option><option value="hero">Hero — inside home banner</option><option value="afterProducts">After Products</option><option value="afterAbout">After About</option><option value="beforeContact">Before Contact</option><option value="bottom">Bottom — above footer</option><option value="floatingTopRight">Floating — top right</option><option value="floatingBottomRight">Floating — bottom right</option><option value="floatingBottomLeft">Floating — bottom left</option></select></div>
-<div><label>Promotion Image</label><input id="promoImage" type="file" accept="image/*"></div>
+<div><label>Promotion Image</label><input id="promoImage" type="file" accept="image/jpeg,image/png,image/webp"></div>
 <div><label>Open Link</label><select id="promoTarget"><option value="_blank">New tab</option><option value="_self">Same tab</option></select></div>
 <div><label>Enabled</label><select id="promoEnabled"><option value="true">Yes — show it</option><option value="false">No — hide it</option></select></div>
 </div>
@@ -107,62 +112,351 @@ button{border:0;border-radius:10px;padding:11px 16px;background:#0b63ce;color:#f
 </div>
 
 <script>
+/* =========================
+   SUPABASE CONNECTION
+   ========================= */
+const SUPABASE_URL = "https://lljkbhjvksxllrbtigvv.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_v3IZiy6ao0RPjY8qETYuYw_8FeVi_dG";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
 const PASSWORD="ChangeMe123!";
-const defaultProducts=[{name:"Karate Uniforms",description:"High quality martial arts suits.",price:"",image:""},{name:"Judo Suits",description:"Durable judo uniforms.",price:"",image:""},{name:"Boxing Gear",description:"Sports boxing equipment.",price:"",image:""},{name:"MMA Wear",description:"MMA shorts and shirts.",price:"",image:""},{name:"Tracksuits",description:"Custom sports tracksuits.",price:"",image:""},{name:"Sports Shirts",description:"Quality sports shirts.",price:"",image:""},{name:"Shorts",description:"Sports and training shorts.",price:"",image:""},{name:"Belts",description:"Martial arts belts.",price:"",image:""},{name:"Training Items",description:"Sports training accessories.",price:"",image:""},{name:"Accessories",description:"Different textile accessories.",price:"",image:""}];
-const defaults={businessName:"NUMAN TEXTILES",tagline:"SPORTS & TEXTILE WEAR",heroBadge:"PREMIUM QUALITY • RELIABLE SERVICE",heroTitle:"Professional <span>Sports Wear</span> & Textile Products",heroText:"Numan Textiles provides quality martial arts uniforms, sports wear, training apparel and textile products.",heroButton1:"Explore Products",heroButton2:"Contact Us",aboutTitle:"Built Around Quality & Trust",aboutText:"Numan Textiles provides textile and sports wear products for athletes, teams, clubs and customers looking for reliable quality.",whyTitle:"Why Choose Us?",why1:"✓ Quality products and professional finishing",why2:"✓ Reliable customer service",why3:"✓ Sports wear for teams and organizations",why4:"✓ Martial arts and training products",contactTitle:"Contact Numan Textiles",contactIntro:"For product details, orders or business inquiries, contact us.",contactBusiness:"Numan Textiles",phone:"03228827769",whatsapp:"923228827769",email:"numanwaraich04@gmail.com",whatsappText:"WhatsApp Us",navHome:"Home",navProducts:"Products",navAbout:"About",navContact:"Contact",footer1:"NUMAN TEXTILES",footer2:"Quality Textile & Sports Wear Manufacturer",footer3:"© 2026 Numan Textiles. All Rights Reserved.",theme:{navy:"#071a33",blue:"#0b63ce",gold:"#f4b942",light:"#f5f8fc",text:"#243247",muted:"#68778d",backgroundImage:"",logoImage:"",design:"classic"}};
-let products=JSON.parse(localStorage.getItem("numanProducts"))||defaultProducts;
-let s=JSON.parse(localStorage.getItem("numanSettings"))||defaults;s.theme=Object.assign({},defaults.theme,s.theme||{});
-let edit=-1;
-let promotions=JSON.parse(localStorage.getItem("numanPromotions"))||[];
-let selectedDesign=s.theme.design||"classic";
-function login(){if(document.getElementById("password").value===PASSWORD){document.getElementById("login").style.display="none";document.getElementById("app").style.display="block";fill();render()}else document.getElementById("err").style.display="block"}
-function tab(id,b){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.getElementById(id).classList.add("active");b.classList.add("active")}
-function save(){localStorage.setItem("numanSettings",JSON.stringify(s));localStorage.setItem("numanProducts",JSON.stringify(products));localStorage.setItem("numanPromotions",JSON.stringify(promotions))}
-function val(id){return document.getElementById(id).value}
-function fill(){
-["businessName","tagline","heroBadge","heroTitle","heroText","heroButton1","heroButton2","aboutTitle","aboutText","whyTitle","why1","why2","why3","why4","contactTitle","contactIntro","contactBusiness","phone","whatsapp","email","whatsappText","navHome","navProducts","navAbout","navContact","footer1","footer2","footer3"].forEach(id=>document.getElementById(id).value=s[id]);
-["navy","blue","gold","light","text","muted"].forEach(id=>document.getElementById(id).value=s.theme[id]);
-if(s.theme.logoImage){logoPreview.src=s.theme.logoImage;logoPreview.style.display="block"}if(s.theme.backgroundImage){preview.src=s.theme.backgroundImage;preview.style.display="block"}
-selectedDesign=s.theme.design||"classic";document.querySelectorAll(".design-card").forEach(x=>x.classList.toggle("selected",x.dataset.design===selectedDesign));renderPromotions()}
-function saveHome(){["businessName","tagline","heroBadge","heroTitle","heroText","heroButton1","heroButton2"].forEach(id=>s[id]=val(id));save();alert("Home saved")}
-function saveAbout(){["aboutTitle","aboutText","whyTitle","why1","why2","why3","why4"].forEach(id=>s[id]=val(id));save();alert("About saved")}
-function saveContact(){["contactTitle","contactIntro","contactBusiness","phone","whatsapp","email","whatsappText"].forEach(id=>s[id]=val(id));save();alert("Contact saved")}
-function saveFooter(){["navHome","navProducts","navAbout","navContact","footer1","footer2","footer3"].forEach(id=>s[id]=val(id));save();alert("Menu/Footer saved")}
-function chooseDesign(name){selectedDesign=name;document.querySelectorAll(".design-card").forEach(x=>x.classList.toggle("selected",x.dataset.design===name))}
-function saveTheme(){
-const finish=(bgData,logoData)=>{
-["navy","blue","gold","light","text","muted"].forEach(id=>s.theme[id]=val(id));
-if(bgData!==null)s.theme.backgroundImage=bgData;
-if(logoData!==null)s.theme.logoImage=logoData;
-s.theme.design=selectedDesign;save();fill();alert("Theme saved")
+const BUCKET="website-images";
+
+const defaultProducts=[
+{name:"Karate Uniforms",description:"High quality martial arts suits.",price:"",image:""},
+{name:"Judo Suits",description:"Durable judo uniforms.",price:"",image:""},
+{name:"Boxing Gear",description:"Sports boxing equipment.",price:"",image:""},
+{name:"MMA Wear",description:"MMA shorts and shirts.",price:"",image:""},
+{name:"Tracksuits",description:"Custom sports tracksuits.",price:"",image:""},
+{name:"Sports Shirts",description:"Quality sports shirts.",price:"",image:""},
+{name:"Shorts",description:"Sports and training shorts.",price:"",image:""},
+{name:"Belts",description:"Martial arts belts.",price:"",image:""},
+{name:"Training Items",description:"Sports training accessories.",price:"",image:""},
+{name:"Accessories",description:"Different textile accessories.",price:"",image:""}
+];
+
+const defaults={
+businessName:"NUMAN TEXTILES",tagline:"SPORTS & TEXTILE WEAR",heroBadge:"PREMIUM QUALITY • RELIABLE SERVICE",
+heroTitle:"Professional <span>Sports Wear</span> & Textile Products",
+heroText:"Numan Textiles provides quality martial arts uniforms, sports wear, training apparel and textile products.",
+heroButton1:"Explore Products",heroButton2:"Contact Us",aboutTitle:"Built Around Quality & Trust",
+aboutText:"Numan Textiles provides textile and sports wear products for athletes, teams, clubs and customers looking for reliable quality.",
+whyTitle:"Why Choose Us?",why1:"✓ Quality products and professional finishing",why2:"✓ Reliable customer service",
+why3:"✓ Sports wear for teams and organizations",why4:"✓ Martial arts and training products",
+contactTitle:"Contact Numan Textiles",contactIntro:"For product details, orders or business inquiries, contact us.",
+contactBusiness:"Numan Textiles",phone:"03228827769",whatsapp:"923228827769",email:"numanwaraich04@gmail.com",whatsappText:"WhatsApp Us",
+navHome:"Home",navProducts:"Products",navAbout:"About",navContact:"Contact",
+footer1:"NUMAN TEXTILES",footer2:"Quality Textile & Sports Wear Manufacturer",footer3:"© 2026 Numan Textiles. All Rights Reserved.",
+theme:{navy:"#071a33",blue:"#0b63ce",gold:"#f4b942",light:"#f5f8fc",text:"#243247",muted:"#68778d",backgroundImage:"",logoImage:"",design:"classic"}
 };
-const bgFile=document.getElementById("bg").files[0],logoFile=document.getElementById("logoImage").files[0];
-let bgData=null,logoData=null,needed=(bgFile?1:0)+(logoFile?1:0),done=0;
-const ready=()=>{done++;if(done===needed)finish(bgData,logoData)};
-if(bgFile){const r=new FileReader();r.onload=e=>{bgData=e.target.result;ready()};r.readAsDataURL(bgFile)}
-if(logoFile){const r=new FileReader();r.onload=e=>{logoData=e.target.result;ready()};r.readAsDataURL(logoFile)}
-if(!needed)finish(null,null)
+
+let products=[];
+let s=structuredClone(defaults);
+let edit=-1;
+let promotions=[];
+let selectedDesign="classic";
+
+function setStatus(message,error=false){
+  const ids=["connectionStatus","appStatus"];
+  ids.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){el.textContent=message;el.className="status "+(error?"error":"ok")}
+  });
 }
-function resetTheme(){s.theme={...defaults.theme};save();fill();alert("Theme reset")}
-document.getElementById("logoImage").onchange=function(){let f=this.files[0];if(f){let r=new FileReader();r.onload=e=>{logoPreview.src=e.target.result;logoPreview.style.display="block"};r.readAsDataURL(f)}};document.getElementById("bg").onchange=function(){let f=this.files[0];if(f){let r=new FileReader();r.onload=e=>{preview.src=e.target.result;preview.style.display="block"};r.readAsDataURL(f)}}
-function savePromotion(){
-const title=val("promoTitle").trim();const link=val("promoLink").trim();const position=val("promoPosition");const target=val("promoTarget");const enabled=val("promoEnabled")==="true";const f=document.getElementById("promoImage").files[0];
-if(!f){alert("Please choose a promotion picture from your gallery.");return}
-const r=new FileReader();r.onload=e=>{promotions.push({id:Date.now(),title,link,position,target,enabled,image:e.target.result});save();clearPromotionForm();renderPromotions();alert("Promotion added")};r.readAsDataURL(f)
+
+function val(id){return document.getElementById(id).value}
+
+async function login(){
+  if(document.getElementById("password").value!==PASSWORD){
+    document.getElementById("err").style.display="block";
+    return;
+  }
+  document.getElementById("err").style.display="none";
+  try{
+    await loadAll();
+    document.getElementById("login").style.display="none";
+    document.getElementById("app").style.display="block";
+    fill();
+    render();
+    setStatus("Connected to Supabase online database.");
+  }catch(e){
+    console.error(e);
+    setStatus("Database connection failed: "+(e.message||e),true);
+    alert("The admin password is correct, but the online database could not be loaded. Check your Supabase tables and permissions.");
+  }
 }
-function clearPromotionForm(){document.getElementById("promoTitle").value="";document.getElementById("promoLink").value="";document.getElementById("promoImage").value="";document.getElementById("promoPosition").value="top";document.getElementById("promoTarget").value="_blank";document.getElementById("promoEnabled").value="true"}
-function renderPromotions(){const box=document.getElementById("promoList");if(!box)return;box.innerHTML="";if(!promotions.length){box.innerHTML='<p class="note">No promotions added yet.</p>';return}promotions.forEach((p,i)=>{const row=document.createElement("div");row.className="promo-item";row.innerHTML=`<div class="promo-info"><img class="promo-thumb" src="${p.image}"><div><b>${escapeHtml(p.title||"Promotion")}</b><div class="note">Position: ${escapeHtml(p.position)} • ${p.enabled?"Visible":"Hidden"}</div></div></div><div><button onclick="togglePromotion(${i})">${p.enabled?"Hide":"Show"}</button><button class="danger" onclick="deletePromotion(${i})">Delete</button></div>`;box.appendChild(row)})}
-function togglePromotion(i){promotions[i].enabled=!promotions[i].enabled;save();renderPromotions()}
-function deletePromotion(i){if(confirm("Delete this promotion?")){promotions.splice(i,1);save();renderPromotions()}}
-function saveProduct(){
-let name=val("pn").trim();if(!name){alert("Enter product name");return}
-const finish=data=>{let p={name,description:val("pd")||"Quality textile product.",price:val("pp"),image:data||(edit>=0?products[edit].image:"")};if(edit>=0)products[edit]=p;else products.push(p);save();clearProduct();render();alert("Product saved")};
-let f=document.getElementById("pi").files[0];if(f){let r=new FileReader();r.onload=e=>finish(e.target.result);r.readAsDataURL(f)}else finish("")}
-function render(){plist.innerHTML="";products.forEach((p,i)=>{let row=document.createElement("div");row.className="product";row.innerHTML=`<div class="info">${p.image?`<img src="${p.image}">`:""}<div><b>${escapeHtml(p.name)}</b><div class="note">${escapeHtml(p.description)}</div></div></div><div><button onclick="editProduct(${i})">Edit</button><button class="danger" onclick="del(${i})">Delete</button></div>`;plist.appendChild(row)})}
+
+function tab(id,b){
+  document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  b.classList.add("active");
+}
+
+async function loadAll(){
+  const [{data:prodData,error:prodErr},{data:setData,error:setErr},{data:promoData,error:promoErr}] = await Promise.all([
+    supabaseClient.from("products").select("*").order("id",{ascending:true}),
+    supabaseClient.from("site_settings").select("*").eq("id",1).maybeSingle(),
+    supabaseClient.from("promotions").select("*").order("id",{ascending:true})
+  ]);
+  if(prodErr) throw prodErr;
+  if(setErr) throw setErr;
+  if(promoErr) throw promoErr;
+
+  products=(prodData&&prodData.length)?prodData.map(p=>({
+    id:p.id,name:p.name,description:p.description||"",price:p.price||"",image:p.image_url||""
+  })):[];
+
+  if(setData){
+    s={...structuredClone(defaults),...setData};
+    s.theme={
+      navy:setData.navy||defaults.theme.navy,
+      blue:setData.blue||defaults.theme.blue,
+      gold:setData.gold||defaults.theme.gold,
+      light:setData.light||defaults.theme.light,
+      text:setData.text_color||defaults.theme.text,
+      muted:setData.muted||defaults.theme.muted,
+      backgroundImage:setData.background_url||"",
+      logoImage:setData.logo_url||"",
+      design:setData.design||"classic"
+    };
+  }else{
+    s=structuredClone(defaults);
+    await saveSettingsToDb();
+  }
+
+  promotions=(promoData||[]).map(p=>({
+    id:p.id,title:p.title||"",link:p.link||"",position:p.position||"top",
+    target:p.target||"_blank",enabled:p.enabled!==false,image:p.image_url||""
+  }));
+  selectedDesign=s.theme.design||"classic";
+}
+
+async function saveSettingsToDb(){
+  const row={
+    id:1,business_name:s.businessName,tagline:s.tagline,hero_badge:s.heroBadge,
+    hero_title:s.heroTitle,hero_text:s.heroText,hero_button_1:s.heroButton1,hero_button_2:s.heroButton2,
+    about_title:s.aboutTitle,about_text:s.aboutText,why_title:s.whyTitle,why_1:s.why1,why_2:s.why2,why_3:s.why3,why_4:s.why4,
+    contact_title:s.contactTitle,contact_intro:s.contactIntro,contact_business:s.contactBusiness,
+    phone:s.phone,whatsapp:s.whatsapp,email:s.email,whatsapp_text:s.whatsappText,
+    nav_home:s.navHome,nav_products:s.navProducts,nav_about:s.navAbout,nav_contact:s.navContact,
+    footer_1:s.footer1,footer_2:s.footer2,footer_3:s.footer3,
+    logo_url:s.theme.logoImage||"",background_url:s.theme.backgroundImage||"",
+    navy:s.theme.navy,blue:s.theme.blue,gold:s.theme.gold,light:s.theme.light,
+    text_color:s.theme.text,muted:s.theme.muted,design:s.theme.design||"classic"
+  };
+  const {error}=await supabaseClient.from("site_settings").upsert(row,{onConflict:"id"});
+  if(error) throw error;
+}
+
+async function uploadImage(file,folder){
+  if(!file) return "";
+  const safeName=(file.name||"image").replace(/[^a-zA-Z0-9._-]/g,"-");
+  const path=folder+"/"+Date.now()+"-"+Math.random().toString(36).slice(2)+"-"+safeName;
+  const {error}=await supabaseClient.storage.from(BUCKET).upload(path,file,{cacheControl:"3600",upsert:false});
+  if(error) throw error;
+  const {data}=supabaseClient.storage.from(BUCKET).getPublicUrl(path);
+  return data.publicUrl;
+}
+
+async function saveHome(){
+  try{
+    ["businessName","tagline","heroBadge","heroTitle","heroText","heroButton1","heroButton2"].forEach(id=>s[id]=val(id));
+    const f=document.getElementById("logo").files[0];
+    if(f){
+      s.theme.logoImage=await uploadImage(f,"logos");
+    }
+    await saveSettingsToDb();
+    fill();
+    alert("Home and logo saved online.");
+  }catch(e){console.error(e);alert("Could not save Home: "+e.message)}
+}
+
+async function saveAbout(){
+  try{
+    ["aboutTitle","aboutText","whyTitle","why1","why2","why3","why4"].forEach(id=>s[id]=val(id));
+    await saveSettingsToDb();alert("About saved online.");
+  }catch(e){console.error(e);alert("Could not save About: "+e.message)}
+}
+
+async function saveContact(){
+  try{
+    ["contactTitle","contactIntro","contactBusiness","phone","whatsapp","email","whatsappText"].forEach(id=>s[id]=val(id));
+    await saveSettingsToDb();alert("Contact saved online.");
+  }catch(e){console.error(e);alert("Could not save Contact: "+e.message)}
+}
+
+async function saveFooter(){
+  try{
+    ["navHome","navProducts","navAbout","navContact","footer1","footer2","footer3"].forEach(id=>s[id]=val(id));
+    await saveSettingsToDb();alert("Menu/Footer saved online.");
+  }catch(e){console.error(e);alert("Could not save Menu/Footer: "+e.message)}
+}
+
+function chooseDesign(name){
+  selectedDesign=name;
+  document.querySelectorAll(".design-card").forEach(x=>x.classList.toggle("selected",x.dataset.design===name));
+}
+
+async function saveTheme(){
+  try{
+    ["navy","blue","gold","light","text","muted"].forEach(id=>s.theme[id]=val(id));
+    const f=document.getElementById("bg").files[0];
+    if(f)s.theme.backgroundImage=await uploadImage(f,"backgrounds");
+    s.theme.design=selectedDesign;
+    await saveSettingsToDb();
+    fill();
+    alert("Theme saved online.");
+  }catch(e){console.error(e);alert("Could not save Theme: "+e.message)}
+}
+
+async function resetTheme(){
+  try{
+    s.theme={...structuredClone(defaults.theme)};
+    selectedDesign="classic";
+    await saveSettingsToDb();
+    fill();
+    alert("Theme reset online.");
+  }catch(e){console.error(e);alert("Could not reset Theme: "+e.message)}
+}
+
+document.getElementById("bg").onchange=function(){
+  let f=this.files[0];
+  if(f){
+    let r=new FileReader();
+    r.onload=e=>{preview.src=e.target.result;preview.style.display="block"};
+    r.readAsDataURL(f);
+  }
+};
+
+function fill(){
+  ["businessName","tagline","heroBadge","heroTitle","heroText","heroButton1","heroButton2","aboutTitle","aboutText","whyTitle","why1","why2","why3","why4","contactTitle","contactIntro","contactBusiness","phone","whatsapp","email","whatsappText","navHome","navProducts","navAbout","navContact","footer1","footer2","footer3"].forEach(id=>{
+    document.getElementById(id).value=s[id]??"";
+  });
+  ["navy","blue","gold","light","text","muted"].forEach(id=>document.getElementById(id).value=s.theme[id]);
+  if(s.theme.backgroundImage){preview.src=s.theme.backgroundImage;preview.style.display="block"}
+  if(s.theme.logoImage){logoPreview.src=s.theme.logoImage;logoPreview.style.display="block"}
+  selectedDesign=s.theme.design||"classic";
+  document.querySelectorAll(".design-card").forEach(x=>x.classList.toggle("selected",x.dataset.design===selectedDesign));
+  renderPromotions();
+}
+
+async function savePromotion(){
+  const title=val("promoTitle").trim();
+  const link=val("promoLink").trim();
+  const position=val("promoPosition");
+  const target=val("promoTarget");
+  const enabled=val("promoEnabled")==="true";
+  const f=document.getElementById("promoImage").files[0];
+  if(!f){alert("Please choose a promotion picture from your gallery.");return}
+  try{
+    const image_url=await uploadImage(f,"promotions");
+    const {data,error}=await supabaseClient.from("promotions").insert({
+      title,link,position,target,enabled,image_url
+    }).select().single();
+    if(error)throw error;
+    promotions.push({
+      id:data.id,title:data.title||"",link:data.link||"",position:data.position||"top",
+      target:data.target||"_blank",enabled:data.enabled!==false,image:data.image_url||""
+    });
+    clearPromotionForm();renderPromotions();alert("Promotion added online.");
+  }catch(e){console.error(e);alert("Could not add promotion: "+e.message)}
+}
+
+function clearPromotionForm(){
+  document.getElementById("promoTitle").value="";
+  document.getElementById("promoLink").value="";
+  document.getElementById("promoImage").value="";
+  document.getElementById("promoPosition").value="top";
+  document.getElementById("promoTarget").value="_blank";
+  document.getElementById("promoEnabled").value="true";
+}
+
+function renderPromotions(){
+  const box=document.getElementById("promoList");
+  if(!box)return;
+  box.innerHTML="";
+  if(!promotions.length){box.innerHTML='<p class="note">No promotions added yet.</p>';return}
+  promotions.forEach((p,i)=>{
+    const row=document.createElement("div");row.className="promo-item";
+    row.innerHTML=`<div class="promo-info"><img class="promo-thumb" src="${escapeAttr(p.image)}"><div><b>${escapeHtml(p.title||"Promotion")}</b><div class="note">Position: ${escapeHtml(p.position)} • ${p.enabled?"Visible":"Hidden"}</div></div></div><div><button onclick="togglePromotion(${i})">${p.enabled?"Hide":"Show"}</button><button class="danger" onclick="deletePromotion(${i})">Delete</button></div>`;
+    box.appendChild(row);
+  });
+}
+
+async function togglePromotion(i){
+  try{
+    const p=promotions[i];
+    const {error}=await supabaseClient.from("promotions").update({enabled:!p.enabled}).eq("id",p.id);
+    if(error)throw error;
+    p.enabled=!p.enabled;renderPromotions();
+  }catch(e){console.error(e);alert("Could not update promotion: "+e.message)}
+}
+
+async function deletePromotion(i){
+  if(!confirm("Delete this promotion?"))return;
+  try{
+    const p=promotions[i];
+    const {error}=await supabaseClient.from("promotions").delete().eq("id",p.id);
+    if(error)throw error;
+    promotions.splice(i,1);renderPromotions();
+  }catch(e){console.error(e);alert("Could not delete promotion: "+e.message)}
+}
+
+async function saveProduct(){
+  const name=val("pn").trim();
+  if(!name){alert("Enter product name");return}
+  try{
+    const f=document.getElementById("pi").files[0];
+    let image_url=(edit>=0?products[edit].image:"");
+    if(f)image_url=await uploadImage(f,"products");
+
+    const row={
+      name,
+      description:val("pd")||"Quality textile product.",
+      price:val("pp"),
+      image_url
+    };
+
+    if(edit>=0){
+      const {data,error}=await supabaseClient.from("products").update(row).eq("id",products[edit].id).select().single();
+      if(error)throw error;
+      products[edit]={id:data.id,name:data.name,description:data.description||"",price:data.price||"",image:data.image_url||""};
+    }else{
+      const {data,error}=await supabaseClient.from("products").insert(row).select().single();
+      if(error)throw error;
+      products.push({id:data.id,name:data.name,description:data.description||"",price:data.price||"",image:data.image_url||""});
+    }
+    clearProduct();render();alert("Product saved online.");
+  }catch(e){console.error(e);alert("Could not save product: "+e.message)}
+}
+
+function render(){
+  const box=document.getElementById("plist");
+  box.innerHTML="";
+  products.forEach((p,i)=>{
+    let row=document.createElement("div");row.className="product";
+    row.innerHTML=`<div class="info">${p.image?`<img src="${escapeAttr(p.image)}">`:""}<div><b>${escapeHtml(p.name)}</b><div class="note">${escapeHtml(p.description)}</div></div></div><div><button onclick="editProduct(${i})">Edit</button><button class="danger" onclick="del(${i})">Delete</button></div>`;
+    box.appendChild(row);
+  });
+}
+
 function escapeHtml(x){return String(x).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
-function editProduct(i){edit=i;pn.value=products[i].name;pd.value=products[i].description;pp.value=products[i].price||"";pi.value="";cancel.style.display="inline-block"}
+function escapeAttr(x){return escapeHtml(x)}
+
+function editProduct(i){
+  edit=i;pn.value=products[i].name;pd.value=products[i].description;pp.value=products[i].price||"";pi.value="";cancel.style.display="inline-block";
+}
 function clearProduct(){edit=-1;pn.value=pd.value=pp.value="";pi.value="";cancel.style.display="none"}
-function del(i){if(confirm("Delete this product?")){products.splice(i,1);save();render()}}
+
+async function del(i){
+  if(!confirm("Delete this product?"))return;
+  try{
+    const {error}=await supabaseClient.from("products").delete().eq("id",products[i].id);
+    if(error)throw error;
+    products.splice(i,1);render();
+  }catch(e){console.error(e);alert("Could not delete product: "+e.message)}
+}
 </script>
 </body>
 </html>
