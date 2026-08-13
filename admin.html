@@ -22,8 +22,9 @@ button{border:0;border-radius:10px;padding:11px 16px;background:#0b63ce;color:#f
 <div id="login" class="panel login">
 <h2>🔐 Numan Textiles Admin</h2>
 <p>Private administration area.</p>
-<input id="password" type="password" placeholder="Admin password">
-<p id="err" style="color:#d33;display:none">Incorrect password.</p>
+<input id="email" type="email" placeholder="Admin email" autocomplete="username">
+<input id="password" type="password" placeholder="Admin password" autocomplete="current-password">
+<p id="err" style="color:#d33;display:none"></p>
 <button onclick="login()">Login</button>
 <div id="connectionStatus" class="status">Connecting to online database...</div>
 </div>
@@ -33,7 +34,7 @@ button{border:0;border-radius:10px;padding:11px 16px;background:#0b63ce;color:#f
 <h1>⚙ Admin Panel</h1>
 <p class="note">Products, settings and promotions are saved to your Supabase online database. Images are uploaded to Supabase Storage.</p>
 <div id="appStatus" class="status">Online database connected.</div>
-<div class="warning"><b>Important:</b> If product saving says “row-level security policy”, the Supabase database is blocking the operation. This page cannot safely bypass database security from browser code. The required RLS policies must be enabled in Supabase.</div>
+<div class="warning"><b>Important:</b> Your admin actions use Supabase Auth. Keep the admin account private. Never put a Supabase service-role key in this file.</div>
 <div class="tabs">
 <button class="tab active" onclick="tab('products',this)">Products</button>
 <button class="tab" onclick="tab('home',this)">Home</button>
@@ -110,14 +111,13 @@ button{border:0;border-radius:10px;padding:11px 16px;background:#0b63ce;color:#f
 <div class="full"><label>Footer 1</label><input id="footer1"></div><div class="full"><label>Footer 2</label><input id="footer2"></div><div class="full"><label>Copyright</label><input id="footer3"></div>
 </div><button onclick="saveFooter()">Save Menu/Footer</button></div>
 
-<div class="panel"><button class="green" onclick="window.open('index.html','_blank')">🌐 Open Website</button><button class="gray" onclick="location.reload()">Reload</button></div>
+<div class="panel"><button class="green" onclick="window.open('index.html','_blank')">🌐 Open Website</button><button class="gray" onclick="location.reload()">Reload</button><button class="gray" onclick="logout()">Logout</button></div>
 </div>
 
 <script>
 const SUPABASE_URL="https://lljkbhjvksxllrbtigvv.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY="sb_publishable_v3IZiy6ao0RPjY8qETYuYw_8FeVi_dG";
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-const PASSWORD="ChangeMe123!";
 const BUCKET="website-images";
 
 const defaults={
@@ -142,7 +142,7 @@ function showError(action,e){
   console.error(action,e);
   const msg=String(e?.message||e||"Unknown error");
   if(msg.toLowerCase().includes("row-level security")||msg.toLowerCase().includes("violates row-level security")){
-    alert(action+" failed because Supabase Row Level Security (RLS) is blocking this operation.\n\nThe browser code cannot safely bypass RLS. The database policies must allow your admin account to insert/update/delete data.");
+    alert(action+" failed because Supabase Row Level Security (RLS) is blocking this operation.\n\nMake sure you are logged in with the Supabase Auth admin account and that the authenticated RLS policies exist.");
   }else if(msg.toLowerCase().includes("bucket")||msg.toLowerCase().includes("storage")){
     alert(action+" failed because Supabase Storage is blocking the image upload. Check the '"+BUCKET+"' bucket and its Storage policies.");
   }else{
@@ -152,16 +152,64 @@ function showError(action,e){
 function setStatus(message,error=false){
   ["connectionStatus","appStatus"].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent=message;el.className="status "+(error?"error":"ok")}})
 }
+
 async function login(){
-  if(document.getElementById("password").value!==PASSWORD){document.getElementById("err").style.display="block";return}
+  const email=document.getElementById("email").value.trim();
+  const password=document.getElementById("password").value;
+
+  if(!email || !password){
+    document.getElementById("err").textContent="Enter your admin email and password.";
+    document.getElementById("err").style.display="block";
+    return;
+  }
+
   document.getElementById("err").style.display="none";
+
+  try{
+    const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+    if(error)throw error;
+
+    await loadAll();
+
+    document.getElementById("login").style.display="none";
+    document.getElementById("app").style.display="block";
+
+    fill();
+    render();
+    setStatus("Connected to Supabase. Logged in as "+(data.user?.email||email));
+  }catch(e){
+    console.error(e);
+    document.getElementById("err").textContent="Login failed: "+(e.message||"Invalid email or password.");
+    document.getElementById("err").style.display="block";
+    setStatus("Login/database connection failed.",true);
+  }
+}
+
+async function logout(){
+  await supabaseClient.auth.signOut();
+  document.getElementById("app").style.display="none";
+  document.getElementById("login").style.display="block";
+  document.getElementById("password").value="";
+  document.getElementById("err").style.display="none";
+  setStatus("Logged out.");
+}
+
+async function checkExistingSession(){
+  const {data:{session}}=await supabaseClient.auth.getSession();
+  if(!session)return;
   try{
     await loadAll();
     document.getElementById("login").style.display="none";
     document.getElementById("app").style.display="block";
-    fill();render();setStatus("Connected to Supabase online database.");
-  }catch(e){console.error(e);setStatus("Database connection failed: "+(e.message||e),true);alert("The password is correct, but the database could not be loaded. Check Supabase tables and RLS policies.")}
+    fill();render();
+    setStatus("Connected to Supabase. Logged in as "+(session.user?.email||"admin"));
+  }catch(e){
+    console.error(e);
+    await supabaseClient.auth.signOut();
+    setStatus("Database connection failed: "+(e.message||e),true);
+  }
 }
+
 function tab(id,b){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.getElementById(id).classList.add("active");b.classList.add("active")}
 
 async function loadAll(){
@@ -247,6 +295,8 @@ function escapeAttr(x){return escapeHtml(x)}
 function editProduct(i){edit=i;pn.value=products[i].name;pd.value=products[i].description;pp.value=products[i].price||"";pi.value="";cancel.style.display="inline-block"}
 function clearProduct(){edit=-1;pn.value=pd.value=pp.value="";pi.value="";cancel.style.display="none"}
 async function del(i){if(!confirm("Delete this product?"))return;try{const {error}=await supabaseClient.from("products").delete().eq("id",products[i].id);if(error)throw error;products.splice(i,1);render()}catch(e){showError("Could not delete product",e)}}
+
+checkExistingSession();
 </script>
 </body>
 </html>
