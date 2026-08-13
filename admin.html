@@ -73,7 +73,7 @@ button{border:0;border-radius:10px;padding:11px 16px;background:#0b63ce;color:#f
 <div class="color"><label>Navy</label><input id="navy" type="color"></div><div class="color"><label>Blue</label><input id="blue" type="color"></div>
 <div class="color"><label>Gold</label><input id="gold" type="color"></div><div class="color"><label>Background</label><input id="light" type="color"></div>
 <div class="color"><label>Text</label><input id="text" type="color"></div><div class="color"><label>Muted</label><input id="muted" type="color"></div>
-<div class="full"><label>Hero background picture — select from your phone gallery</label><input id="bg" type="file" accept="image/*"><img id="preview" class="preview"></div>
+<div class="full"><label>Logo picture — select from your phone gallery</label><input id="logoImage" type="file" accept="image/*"><img id="logoPreview" class="preview"></div><div class="full"><label>Hero background picture — select from your phone gallery</label><input id="bg" type="file" accept="image/*"><img id="preview" class="preview"></div>
 <div class="full"><label>Website Design</label><p class="note">This changes the layout/style feel, not only the colours.</p><div class="design-grid">
 <div class="design-card" data-design="classic" onclick="chooseDesign('classic')"><div class="design-demo d1"></div><b>Classic Business</b><div class="note">Professional blue layout</div></div>
 <div class="design-card" data-design="luxury" onclick="chooseDesign('luxury')"><div class="design-demo d2"></div><b>Luxury</b><div class="note">Premium gold and dark style</div></div>
@@ -109,7 +109,7 @@ button{border:0;border-radius:10px;padding:11px 16px;background:#0b63ce;color:#f
 <script>
 const PASSWORD="ChangeMe123!";
 const defaultProducts=[{name:"Karate Uniforms",description:"High quality martial arts suits.",price:"",image:""},{name:"Judo Suits",description:"Durable judo uniforms.",price:"",image:""},{name:"Boxing Gear",description:"Sports boxing equipment.",price:"",image:""},{name:"MMA Wear",description:"MMA shorts and shirts.",price:"",image:""},{name:"Tracksuits",description:"Custom sports tracksuits.",price:"",image:""},{name:"Sports Shirts",description:"Quality sports shirts.",price:"",image:""},{name:"Shorts",description:"Sports and training shorts.",price:"",image:""},{name:"Belts",description:"Martial arts belts.",price:"",image:""},{name:"Training Items",description:"Sports training accessories.",price:"",image:""},{name:"Accessories",description:"Different textile accessories.",price:"",image:""}];
-const defaults={businessName:"NUMAN TEXTILES",tagline:"SPORTS & TEXTILE WEAR",heroBadge:"PREMIUM QUALITY • RELIABLE SERVICE",heroTitle:"Professional <span>Sports Wear</span> & Textile Products",heroText:"Numan Textiles provides quality martial arts uniforms, sports wear, training apparel and textile products.",heroButton1:"Explore Products",heroButton2:"Contact Us",aboutTitle:"Built Around Quality & Trust",aboutText:"Numan Textiles provides textile and sports wear products for athletes, teams, clubs and customers looking for reliable quality.",whyTitle:"Why Choose Us?",why1:"✓ Quality products and professional finishing",why2:"✓ Reliable customer service",why3:"✓ Sports wear for teams and organizations",why4:"✓ Martial arts and training products",contactTitle:"Contact Numan Textiles",contactIntro:"For product details, orders or business inquiries, contact us.",contactBusiness:"Numan Textiles",phone:"03228827769",whatsapp:"923228827769",email:"numanwaraich04@gmail.com",whatsappText:"WhatsApp Us",navHome:"Home",navProducts:"Products",navAbout:"About",navContact:"Contact",footer1:"NUMAN TEXTILES",footer2:"Quality Textile & Sports Wear Manufacturer",footer3:"© 2026 Numan Textiles. All Rights Reserved.",theme:{navy:"#071a33",blue:"#0b63ce",gold:"#f4b942",light:"#f5f8fc",text:"#243247",muted:"#68778d",backgroundImage:"",design:"classic"}};
+const defaults={businessName:"NUMAN TEXTILES",tagline:"SPORTS & TEXTILE WEAR",heroBadge:"PREMIUM QUALITY • RELIABLE SERVICE",heroTitle:"Professional <span>Sports Wear</span> & Textile Products",heroText:"Numan Textiles provides quality martial arts uniforms, sports wear, training apparel and textile products.",heroButton1:"Explore Products",heroButton2:"Contact Us",aboutTitle:"Built Around Quality & Trust",aboutText:"Numan Textiles provides textile and sports wear products for athletes, teams, clubs and customers looking for reliable quality.",whyTitle:"Why Choose Us?",why1:"✓ Quality products and professional finishing",why2:"✓ Reliable customer service",why3:"✓ Sports wear for teams and organizations",why4:"✓ Martial arts and training products",contactTitle:"Contact Numan Textiles",contactIntro:"For product details, orders or business inquiries, contact us.",contactBusiness:"Numan Textiles",phone:"03228827769",whatsapp:"923228827769",email:"numanwaraich04@gmail.com",whatsappText:"WhatsApp Us",navHome:"Home",navProducts:"Products",navAbout:"About",navContact:"Contact",footer1:"NUMAN TEXTILES",footer2:"Quality Textile & Sports Wear Manufacturer",footer3:"© 2026 Numan Textiles. All Rights Reserved.",theme:{navy:"#071a33",blue:"#0b63ce",gold:"#f4b942",light:"#f5f8fc",text:"#243247",muted:"#68778d",backgroundImage:"",logoImage:"",design:"classic"}};
 let products=JSON.parse(localStorage.getItem("numanProducts"))||defaultProducts;
 let s=JSON.parse(localStorage.getItem("numanSettings"))||defaults;s.theme=Object.assign({},defaults.theme,s.theme||{});
 let edit=-1;
@@ -122,7 +122,7 @@ function val(id){return document.getElementById(id).value}
 function fill(){
 ["businessName","tagline","heroBadge","heroTitle","heroText","heroButton1","heroButton2","aboutTitle","aboutText","whyTitle","why1","why2","why3","why4","contactTitle","contactIntro","contactBusiness","phone","whatsapp","email","whatsappText","navHome","navProducts","navAbout","navContact","footer1","footer2","footer3"].forEach(id=>document.getElementById(id).value=s[id]);
 ["navy","blue","gold","light","text","muted"].forEach(id=>document.getElementById(id).value=s.theme[id]);
-if(s.theme.backgroundImage){preview.src=s.theme.backgroundImage;preview.style.display="block"}
+if(s.theme.logoImage){logoPreview.src=s.theme.logoImage;logoPreview.style.display="block"}if(s.theme.backgroundImage){preview.src=s.theme.backgroundImage;preview.style.display="block"}
 selectedDesign=s.theme.design||"classic";document.querySelectorAll(".design-card").forEach(x=>x.classList.toggle("selected",x.dataset.design===selectedDesign));renderPromotions()}
 function saveHome(){["businessName","tagline","heroBadge","heroTitle","heroText","heroButton1","heroButton2"].forEach(id=>s[id]=val(id));save();alert("Home saved")}
 function saveAbout(){["aboutTitle","aboutText","whyTitle","why1","why2","why3","why4"].forEach(id=>s[id]=val(id));save();alert("About saved")}
@@ -130,11 +130,21 @@ function saveContact(){["contactTitle","contactIntro","contactBusiness","phone",
 function saveFooter(){["navHome","navProducts","navAbout","navContact","footer1","footer2","footer3"].forEach(id=>s[id]=val(id));save();alert("Menu/Footer saved")}
 function chooseDesign(name){selectedDesign=name;document.querySelectorAll(".design-card").forEach(x=>x.classList.toggle("selected",x.dataset.design===name))}
 function saveTheme(){
-const finish=data=>{["navy","blue","gold","light","text","muted"].forEach(id=>s.theme[id]=val(id));if(data)s.theme.backgroundImage=data;s.theme.design=selectedDesign;save();fill();alert("Theme saved")};
-const f=document.getElementById("bg").files[0];if(f){const r=new FileReader();r.onload=e=>finish(e.target.result);r.readAsDataURL(f)}else finish("");
+const finish=(bgData,logoData)=>{
+["navy","blue","gold","light","text","muted"].forEach(id=>s.theme[id]=val(id));
+if(bgData!==null)s.theme.backgroundImage=bgData;
+if(logoData!==null)s.theme.logoImage=logoData;
+s.theme.design=selectedDesign;save();fill();alert("Theme saved")
+};
+const bgFile=document.getElementById("bg").files[0],logoFile=document.getElementById("logoImage").files[0];
+let bgData=null,logoData=null,needed=(bgFile?1:0)+(logoFile?1:0),done=0;
+const ready=()=>{done++;if(done===needed)finish(bgData,logoData)};
+if(bgFile){const r=new FileReader();r.onload=e=>{bgData=e.target.result;ready()};r.readAsDataURL(bgFile)}
+if(logoFile){const r=new FileReader();r.onload=e=>{logoData=e.target.result;ready()};r.readAsDataURL(logoFile)}
+if(!needed)finish(null,null)
 }
 function resetTheme(){s.theme={...defaults.theme};save();fill();alert("Theme reset")}
-document.getElementById("bg").onchange=function(){let f=this.files[0];if(f){let r=new FileReader();r.onload=e=>{preview.src=e.target.result;preview.style.display="block"};r.readAsDataURL(f)}}
+document.getElementById("logoImage").onchange=function(){let f=this.files[0];if(f){let r=new FileReader();r.onload=e=>{logoPreview.src=e.target.result;logoPreview.style.display="block"};r.readAsDataURL(f)}};document.getElementById("bg").onchange=function(){let f=this.files[0];if(f){let r=new FileReader();r.onload=e=>{preview.src=e.target.result;preview.style.display="block"};r.readAsDataURL(f)}}
 function savePromotion(){
 const title=val("promoTitle").trim();const link=val("promoLink").trim();const position=val("promoPosition");const target=val("promoTarget");const enabled=val("promoEnabled")==="true";const f=document.getElementById("promoImage").files[0];
 if(!f){alert("Please choose a promotion picture from your gallery.");return}
