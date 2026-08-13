@@ -5,12 +5,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="description" content="Numan Textiles - professional sports wear, martial arts uniforms and textile products.">
 <title>Numan Textiles</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--navy:#071a33;--blue:#0b63ce;--gold:#f4b942;--light:#f5f8fc;--white:#fff;--text:#243247;--muted:#68778d;--border:#e5ebf3;--green:#18a85b;--shadow:0 18px 50px rgba(9,30,66,.10)}
 *{box-sizing:border-box;scroll-behavior:smooth}body{margin:0;font-family:Inter,Arial,Helvetica,sans-serif;background:var(--light);color:var(--text);line-height:1.6}a{text-decoration:none;color:inherit}img{max-width:100%}
 .container{width:min(1180px,92%);margin:auto}.topbar{background:var(--navy);color:#dbe8f8;font-size:12px;padding:8px 0}.topbar-inner{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}.topbar a{color:#fff}
-header{position:sticky;top:0;z-index:1000;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}.header-inner{height:76px;display:flex;align-items:center;justify-content:space-between;gap:25px}.logo{display:flex;align-items:center;gap:12px}.logo-mark{width:46px;height:46px;overflow:hidden;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;font-weight:900;box-shadow:0 8px 18px rgba(11,99,206,.25)}.logo-mark img{width:100%;height:100%;object-fit:contain;border-radius:inherit;display:none}.logo h1{font-size:18px;line-height:1;margin:0;color:var(--navy);letter-spacing:1px}.logo small{font-size:10px;color:var(--muted);letter-spacing:1.3px}nav{display:flex;align-items:center;gap:26px}nav a{font-size:14px;font-weight:800;color:var(--navy)}nav a:hover{color:var(--blue)}.nav-cta{background:var(--navy);color:#fff!important;padding:10px 15px;border-radius:9px}
-.hero{position:relative;min-height:610px;display:flex;align-items:center;overflow:hidden;color:#fff;background:linear-gradient(120deg,#061326,#0b63ce)}.hero:after{content:"";position:absolute;width:520px;height:520px;border-radius:50%;right:-170px;top:-180px;background:rgba(244,185,66,.14);filter:blur(4px)}.hero-content{position:relative;z-index:2;padding:95px 0;max-width:780px}.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.10);border-radius:999px;font-size:11px;font-weight:900;letter-spacing:1.2px}.eyebrow:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--gold)}.hero h2{font-size:clamp(42px,6vw,74px);line-height:1.02;margin:22px 0 18px;letter-spacing:-2px}.hero h2 span{color:var(--gold)}.hero p{font-size:18px;color:#d9e8fa;max-width:650px}.actions{margin-top:26px;display:flex;gap:10px;flex-wrap:wrap}.btn{display:inline-flex;align-items:center;justify-content:center;padding:13px 20px;border-radius:10px;font-weight:900;font-size:14px}.btn-primary{background:var(--gold);color:var(--navy)}.btn-light{background:#fff;color:var(--navy)}.btn-outline{border:1px solid rgba(255,255,255,.5);color:#fff}.hero-stats{display:flex;gap:35px;margin-top:48px;flex-wrap:wrap}.stat strong{display:block;font-size:23px;color:#fff}.stat span{font-size:11px;color:#bfd2e8;text-transform:uppercase;letter-spacing:1px}
+header{position:sticky;top:0;z-index:1000;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}.header-inner{height:76px;display:flex;align-items:center;justify-content:space-between;gap:25px}.logo{display:flex;align-items:center;gap:12px}.logo-mark{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;font-weight:900;box-shadow:0 8px 18px rgba(11,99,206,.25);overflow:hidden}.logo-mark img{width:100%;height:100%;object-fit:cover}.logo h1{font-size:18px;line-height:1;margin:0;color:var(--navy);letter-spacing:1px}.logo small{font-size:10px;color:var(--muted);letter-spacing:1.3px}nav{display:flex;align-items:center;gap:26px}nav a{font-size:14px;font-weight:800;color:var(--navy)}nav a:hover{color:var(--blue)}.nav-cta{background:var(--navy);color:#fff!important;padding:10px 15px;border-radius:9px}
+.hero{position:relative;min-height:610px;display:flex;align-items:center;overflow:hidden;color:#fff;background:linear-gradient(120deg,#061326,#0b63ce);background-size:cover;background-position:center}.hero:after{content:"";position:absolute;width:520px;height:520px;border-radius:50%;right:-170px;top:-180px;background:rgba(244,185,66,.14);filter:blur(4px)}.hero-content{position:relative;z-index:2;padding:95px 0;max-width:780px}.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.10);border-radius:999px;font-size:11px;font-weight:900;letter-spacing:1.2px}.eyebrow:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--gold)}.hero h2{font-size:clamp(42px,6vw,74px);line-height:1.02;margin:22px 0 18px;letter-spacing:-2px}.hero h2 span{color:var(--gold)}.hero p{font-size:18px;color:#d9e8fa;max-width:650px}.actions{margin-top:26px;display:flex;gap:10px;flex-wrap:wrap}.btn{display:inline-flex;align-items:center;justify-content:center;padding:13px 20px;border-radius:10px;font-weight:900;font-size:14px}.btn-primary{background:var(--gold);color:var(--navy)}.btn-light{background:#fff;color:var(--navy)}.btn-outline{border:1px solid rgba(255,255,255,.5);color:#fff}.hero-stats{display:flex;gap:35px;margin-top:48px;flex-wrap:wrap}.stat strong{display:block;font-size:23px;color:#fff}.stat span{font-size:11px;color:#bfd2e8;text-transform:uppercase;letter-spacing:1px}
 .promo-slot{display:none;padding:18px 0}.promo-slot.show{display:block}.promo-inner{position:relative;overflow:hidden;border-radius:18px;box-shadow:var(--shadow)}.promo-inner img{width:100%;max-height:330px;object-fit:cover;display:block}.promo-label{position:absolute;left:18px;bottom:18px;background:rgba(0,0,0,.68);color:#fff;padding:8px 12px;border-radius:8px;font-weight:800}.floating-promo{position:fixed;z-index:1200;width:min(280px,42vw);display:none}.floating-promo.show{display:block}.floating-promo img{width:100%;display:block;border-radius:14px;box-shadow:0 15px 40px rgba(0,0,0,.28)}.floating-promo.top-right{right:18px;top:95px}.floating-promo.bottom-right{right:18px;bottom:18px}.floating-promo.bottom-left{left:18px;bottom:18px}.floating-close{position:absolute;right:-8px;top:-8px;border:0;width:27px;height:27px;border-radius:50%;background:#111;color:#fff;cursor:pointer}
 section{padding:86px 0}.section-head{text-align:center;max-width:700px;margin:0 auto 45px}.kicker{font-size:11px;font-weight:900;color:var(--blue);letter-spacing:2px;text-transform:uppercase}.section-head h2{font-size:40px;line-height:1.1;color:var(--navy);margin:9px 0 12px}.section-head p{color:var(--muted);margin:0}
 .trust-strip{background:#fff;border-bottom:1px solid var(--border);border-top:1px solid var(--border)}.trust-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0}.trust-item{padding:25px;text-align:center;border-right:1px solid var(--border)}.trust-item:last-child{border-right:0}.trust-icon{font-size:25px}.trust-item strong{display:block;color:var(--navy);margin-top:5px}.trust-item span{font-size:12px;color:var(--muted)}
@@ -19,8 +20,7 @@ section{padding:86px 0}.section-head{text-align:center;max-width:700px;margin:0 
 .about{background:var(--light)}.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:45px;align-items:stretch}.about-box{background:linear-gradient(145deg,var(--navy),#0b4d8e);color:#fff;border-radius:22px;padding:42px;box-shadow:var(--shadow)}.about-box h2{font-size:38px;line-height:1.1;margin:0 0 15px}.about-box p{color:#d5e6f8}.why{background:#fff;border:1px solid var(--border);border-radius:22px;padding:35px}.why h2{color:var(--navy);margin-top:0}.why p{padding:12px 0;border-bottom:1px solid var(--border);margin:0;color:var(--text)}
 .contact{background:#fff}.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.contact-card{background:#f8fbff;border:1px solid var(--border);border-radius:18px;padding:30px}.contact-card h3{color:var(--navy);margin-top:0}.contact-item{padding:13px 0;border-bottom:1px solid var(--border)}.contact-item b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:2px}.contact-item a,.contact-item span{color:var(--navy);font-weight:800}.whatsapp{display:inline-flex;background:var(--green);color:#fff;padding:13px 20px;border-radius:10px;font-weight:900;margin-top:12px}
 footer{background:#050e1c;color:#9fb1c8;padding:50px 0 25px}.footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:35px}.footer-brand strong{font-size:20px;color:#fff}.footer-title{color:#fff;font-weight:900;margin-bottom:10px}.footer-links a{display:block;margin:7px 0;font-size:13px}.copyright{border-top:1px solid #1b2a3e;margin-top:35px;padding-top:20px;font-size:12px}
-/* Design presets controlled by admin */
-body.design-luxury .hero{background:linear-gradient(120deg,#0d0d0d,#32250e)}body.design-luxury .logo-mark{background:linear-gradient(135deg,#111,#8b6b2d)}body.design-luxury .btn-primary{background:var(--gold)}body.design-luxury .card{border-radius:8px}body.design-luxury .section-head h2,body.design-luxury .feature-copy h2{font-family:Georgia,serif}
+body.design-luxury .hero{background:linear-gradient(120deg,#0d0d0d,#32250e)}body.design-luxury .logo-mark{background:linear-gradient(135deg,#111,#8b6b2d)}body.design-luxury .card{border-radius:8px}body.design-luxury .section-head h2,body.design-luxury .feature-copy h2{font-family:Georgia,serif}
 body.design-sport .hero{background:linear-gradient(120deg,#061c18,#0b9d68)}body.design-sport .card{border-radius:22px}body.design-sport .logo-mark{border-radius:18px}
 body.design-minimal .hero{background:#eef3f8;color:var(--navy)}body.design-minimal .hero p{color:#536276}body.design-minimal .eyebrow{border-color:#cbd7e5;background:#fff;color:var(--navy)}body.design-minimal .btn-outline{border-color:var(--navy);color:var(--navy)}body.design-minimal .hero h2 span{color:var(--blue)}body.design-minimal .hero:after{display:none}
 body.design-dark{background:#0a0f16;color:#e8edf4}body.design-dark header{background:rgba(10,15,22,.94);border-color:#25303d}body.design-dark nav a,body.design-dark .logo h1{color:#fff}body.design-dark .logo small{color:#9daaba}body.design-dark .section-head h2,body.design-dark .feature-copy h2,body.design-dark .why h2{color:#fff}body.design-dark .trust-strip,body.design-dark .feature,body.design-dark .contact,body.design-dark .card,body.design-dark .why,body.design-dark .contact-card{background:#141b24;border-color:#273342}body.design-dark .card h3,body.design-dark .contact-item a,body.design-dark .contact-item span,body.design-dark .trust-item strong{color:#fff}body.design-dark .section-head p,body.design-dark .card p{color:#aeb9c7}body.design-dark .about{background:#0d141d}
@@ -31,12 +31,12 @@ body.design-dark{background:#0a0f16;color:#e8edf4}body.design-dark header{backgr
 </head>
 <body>
 <div class="topbar"><div class="container topbar-inner"><span>Professional Sports Wear & Textile Manufacturer</span><span><a id="topPhone" href="tel:03228827769">03228827769</a> · <a id="topEmail" href="mailto:numanwaraich04@gmail.com">numanwaraich04@gmail.com</a></span></div></div>
-<header><div class="container header-inner"><a href="#home" class="logo"><div class="logo-mark"><img id="siteLogoImage" alt="Numan Textiles logo"><span id="siteLogoText">NT</span></div><div><h1 id="siteLogoName">NUMAN TEXTILES</h1><small id="siteTagline">SPORTS & TEXTILE WEAR</small></div></a><nav><a href="#home" id="navHome">Home</a><a href="#products" id="navProducts">Products</a><a href="#about" id="navAbout">About</a><a href="#contact" id="navContact">Contact</a><a href="#contact" class="nav-cta">Get In Touch</a></nav></div></header>
+<header><div class="container header-inner"><a href="#home" class="logo"><div class="logo-mark" id="logoMark">NT</div><div><h1 id="siteLogoName">NUMAN TEXTILES</h1><small id="siteTagline">SPORTS & TEXTILE WEAR</small></div></a><nav><a href="#home" id="navHome">Home</a><a href="#products" id="navProducts">Products</a><a href="#about" id="navAbout">About</a><a href="#contact" id="navContact">Contact</a><a href="#contact" class="nav-cta">Get In Touch</a></nav></div></header>
 <div class="container"><div id="promoTop" class="promo-slot"></div></div>
 <section class="hero" id="home"><div class="container hero-content"><div class="eyebrow" id="heroBadge">PREMIUM QUALITY • RELIABLE SERVICE</div><h2 id="heroTitle">Professional <span>Sports Wear</span> & Textile Products</h2><p id="heroText">Numan Textiles provides quality martial arts uniforms, sports wear, training apparel and textile products.</p><div class="actions"><a class="btn btn-primary" href="#products" id="heroButton1">Explore Products</a><a class="btn btn-outline" href="#contact" id="heroButton2">Contact Us</a></div><div class="hero-stats"><div class="stat"><strong>10+</strong><span>Product Categories</span></div><div class="stat"><strong>Quality</strong><span>Professional Finishing</span></div><div class="stat"><strong>Direct</strong><span>Business Contact</span></div></div></div></section>
 <div class="container"><div id="promoHero" class="promo-slot"></div></div>
 <div class="trust-strip"><div class="container trust-grid"><div class="trust-item"><div class="trust-icon">✓</div><strong>Quality First</strong><span>Reliable materials & finishing</span></div><div class="trust-item"><div class="trust-icon">◆</div><strong>Custom Orders</strong><span>Sports & team wear</span></div><div class="trust-item"><div class="trust-icon">⚡</div><strong>Reliable Service</strong><span>Fast communication</span></div><div class="trust-item"><div class="trust-icon">✦</div><strong>Professional</strong><span>Made for athletes & teams</span></div></div></div>
-<section id="products"><div class="container"><div class="section-head"><div class="kicker">What We Offer</div><h2 id="productsTitle">Our Products</h2><p id="productsIntro">Explore our range of sports, martial arts and textile products.</p></div><div class="products" id="productList"></div></div></section>
+<section id="products"><div class="container"><div class="section-head"><div class="kicker">What We Offer</div><h2>Our Products</h2><p>Explore our range of sports, martial arts and textile products.</p></div><div class="products" id="productList"></div></div></section>
 <div class="container"><div id="promoAfterProducts" class="promo-slot"></div></div>
 <section class="feature"><div class="container feature-grid"><div class="feature-copy"><div class="kicker">Made For Performance</div><h2>Sportswear that looks professional and performs with confidence.</h2><p>From martial arts uniforms to tracksuits, shirts and training products, Numan Textiles focuses on dependable quality for athletes, clubs, teams and organizations.</p><div class="checks"><div class="check">✓ Professional finishing</div><div class="check">✓ Team & club wear</div><div class="check">✓ Martial arts products</div><div class="check">✓ Reliable service</div></div><a class="btn btn-primary" href="#contact">Discuss Your Order</a></div><div class="feature-card"><div class="big">NT</div><h3>NUMAN TEXTILES</h3><p>Quality textile and sports wear manufacturer.</p></div></div></section>
 <div class="container"><div id="promoAfterAbout" class="promo-slot"></div></div>
@@ -44,17 +44,127 @@ body.design-dark{background:#0a0f16;color:#e8edf4}body.design-dark header{backgr
 <div class="container"><div id="promoBeforeContact" class="promo-slot"></div></div>
 <section class="contact" id="contact"><div class="container"><div class="section-head"><div class="kicker">Let's Talk</div><h2 id="contactTitle">Contact Numan Textiles</h2><p id="contactIntro">For product details, orders or business inquiries, contact us.</p></div><div class="contact-grid"><div class="contact-card"><h3>Business Information</h3><div class="contact-item"><b>Business</b><span id="contactBusiness">Numan Textiles</span></div><div class="contact-item"><b>Phone</b><a id="phoneLink" href="tel:03228827769">03228827769</a></div><div class="contact-item"><b>Email</b><a id="emailLink" href="mailto:numanwaraich04@gmail.com">numanwaraich04@gmail.com</a></div></div><div class="contact-card"><h3>Quick Contact</h3><p>Contact us directly on WhatsApp for product information, custom orders and business inquiries.</p><a class="whatsapp" id="whatsappButton" href="https://wa.me/923228827769" target="_blank" rel="noopener">WhatsApp Us</a></div></div></div></section>
 <div class="container"><div id="promoBottom" class="promo-slot"></div></div>
-<footer><div class="container"><div class="footer-grid"><div class="footer-brand"><strong id="footer1">NUMAN TEXTILES</strong><p id="footer2">Quality Textile & Sports Wear Manufacturer</p></div><div><div class="footer-title">Quick Links</div><div class="footer-links"><a href="#home">Home</a><a href="#products">Products</a><a href="#about">About</a><a href="#contact">Contact</a></div></div><div><div class="footer-title">Contact</div><div class="footer-links"><a id="footerPhone" href="tel:03228827769">03228827769</a><a id="footerWhatsApp" href="https://wa.me/923228827769">WhatsApp</a><a id="footerEmail" href="mailto:numanwaraich04@gmail.com">Email</a></div></div></div><div class="copyright" id="footer3">© 2026 Numan Textiles. All Rights Reserved.</div></div></footer>
+<footer><div class="container"><div class="footer-grid"><div class="footer-brand"><strong id="footer1">NUMAN TEXTILES</strong><p id="footer2">Quality Textile & Sports Wear Manufacturer</p></div><div><div class="footer-title">Quick Links</div><div class="footer-links"><a href="#home" id="footerNavHome">Home</a><a href="#products" id="footerNavProducts">Products</a><a href="#about" id="footerNavAbout">About</a><a href="#contact" id="footerNavContact">Contact</a></div></div><div><div class="footer-title">Contact</div><div class="footer-links"><a id="footerPhone" href="tel:03228827769">03228827769</a><a id="footerWhatsApp" href="https://wa.me/923228827769">WhatsApp</a><a id="footerEmail" href="mailto:numanwaraich04@gmail.com">Email</a></div></div></div><div class="copyright" id="footer3">© 2026 Numan Textiles. All Rights Reserved.</div></div></footer>
 <div id="floatingTopRight" class="floating-promo top-right"></div><div id="floatingBottomRight" class="floating-promo bottom-right"></div><div id="floatingBottomLeft" class="floating-promo bottom-left"></div>
+
 <script>
-const defaultProducts=[{name:"Karate Uniforms",description:"High quality martial arts suits.",price:"",image:""},{name:"Judo Suits",description:"Durable judo uniforms.",price:"",image:""},{name:"Boxing Gear",description:"Sports boxing equipment.",price:"",image:""},{name:"MMA Wear",description:"MMA shorts and shirts.",price:"",image:""},{name:"Tracksuits",description:"Custom sports tracksuits.",price:"",image:""},{name:"Sports Shirts",description:"Quality sports shirts.",price:"",image:""},{name:"Shorts",description:"Sports and training shorts.",price:"",image:""},{name:"Belts",description:"Martial arts belts.",price:"",image:""},{name:"Training Items",description:"Sports training accessories.",price:"",image:""},{name:"Accessories",description:"Different textile accessories.",price:"",image:""}];
-const defaults={businessName:"NUMAN TEXTILES",tagline:"SPORTS & TEXTILE WEAR",heroBadge:"PREMIUM QUALITY • RELIABLE SERVICE",heroTitle:"Professional <span>Sports Wear</span> & Textile Products",heroText:"Numan Textiles provides quality martial arts uniforms, sports wear, training apparel and textile products.",heroButton1:"Explore Products",heroButton2:"Contact Us",aboutTitle:"Built Around Quality & Trust",aboutText:"Numan Textiles provides textile and sports wear products for athletes, teams, clubs and customers looking for reliable quality.",whyTitle:"Why Choose Us?",why1:"✓ Quality products and professional finishing",why2:"✓ Reliable customer service",why3:"✓ Sports wear for teams and organizations",why4:"✓ Martial arts and training products",contactTitle:"Contact Numan Textiles",contactIntro:"For product details, orders or business inquiries, contact us.",contactBusiness:"Numan Textiles",phone:"03228827769",whatsapp:"923228827769",email:"numanwaraich04@gmail.com",whatsappText:"WhatsApp Us",navHome:"Home",navProducts:"Products",navAbout:"About",navContact:"Contact",footer1:"NUMAN TEXTILES",footer2:"Quality Textile & Sports Wear Manufacturer",footer3:"© 2026 Numan Textiles. All Rights Reserved.",theme:{navy:"#071a33",blue:"#0b63ce",gold:"#f4b942",light:"#f5f8fc",text:"#243247",muted:"#68778d",backgroundImage:"",design:"classic"}};
-let products=JSON.parse(localStorage.getItem("numanProducts"))||defaultProducts;let settings=JSON.parse(localStorage.getItem("numanSettings"))||defaults;settings.theme=Object.assign({},defaults.theme,settings.theme||{});let promotions=JSON.parse(localStorage.getItem("numanPromotions"))||[];
+const SUPABASE_URL="https://lljkbhjvksxllrbtigvv.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_v3IZiy6ao0RPjY8qETYuYw_8FeVi_dG";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+
+const defaults={
+businessName:"NUMAN TEXTILES",tagline:"SPORTS & TEXTILE WEAR",heroBadge:"PREMIUM QUALITY • RELIABLE SERVICE",
+heroTitle:"Professional <span>Sports Wear</span> & Textile Products",
+heroText:"Numan Textiles provides quality martial arts uniforms, sports wear, training apparel and textile products.",
+heroButton1:"Explore Products",heroButton2:"Contact Us",aboutTitle:"Built Around Quality & Trust",
+aboutText:"Numan Textiles provides textile and sports wear products for athletes, teams, clubs and customers looking for reliable quality.",
+whyTitle:"Why Choose Us?",why1:"✓ Quality products and professional finishing",why2:"✓ Reliable customer service",
+why3:"✓ Sports wear for teams and organizations",why4:"✓ Martial arts and training products",
+contactTitle:"Contact Numan Textiles",contactIntro:"For product details, orders or business inquiries, contact us.",
+contactBusiness:"Numan Textiles",phone:"03228827769",whatsapp:"923228827769",email:"numanwaraich04@gmail.com",whatsappText:"WhatsApp Us",
+navHome:"Home",navProducts:"Products",navAbout:"About",navContact:"Contact",
+footer1:"NUMAN TEXTILES",footer2:"Quality Textile & Sports Wear Manufacturer",footer3:"© 2026 Numan Textiles. All Rights Reserved.",
+theme:{navy:"#071a33",blue:"#0b63ce",gold:"#f4b942",light:"#f5f8fc",text:"#243247",muted:"#68778d",backgroundImage:"",logoImage:"",design:"classic"}
+};
+let settings={...defaults,theme:{...defaults.theme}},products=[],promotions=[];
+
 function esc(x){return String(x??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
-function renderProducts(){const list=document.getElementById("productList");list.innerHTML="";products.forEach(p=>{const card=document.createElement("article");card.className="card";card.innerHTML=p.image?`<img class="product-image" src="${p.image}" alt="${esc(p.name)}">`:`<div class="no-image">NUMAN TEXTILES</div>`;const body=document.createElement("div");body.className="card-body";body.innerHTML=`<h3>${esc(p.name)}</h3><p>${esc(p.description||"Quality textile product.")}</p>${p.price?`<span class="price">${esc(p.price)}</span>`:""}`;card.appendChild(body);list.appendChild(card)})}
-function applySettings(){const ids=["siteLogoName","heroBadge","heroText","heroButton1","heroButton2","aboutTitle","aboutText","whyTitle","why1","why2","why3","why4","contactTitle","contactIntro","contactBusiness","footer1","footer2","footer3"];const keys=["businessName","heroBadge","heroText","heroButton1","heroButton2","aboutTitle","aboutText","whyTitle","why1","why2","why3","why4","contactTitle","contactIntro","contactBusiness","footer1","footer2","footer3"];ids.forEach((id,i)=>document.getElementById(id).textContent=settings[keys[i]]||"");document.getElementById("siteTagline").textContent=settings.tagline;const logoImg=document.getElementById("siteLogoImage"),logoText=document.getElementById("siteLogoText");if(settings.theme.logoImage){logoImg.src=settings.theme.logoImage;logoImg.style.display="block";logoText.style.display="none"}else{logoImg.style.display="none";logoText.style.display="block"}document.getElementById("heroTitle").innerHTML=settings.heroTitle;["navHome","navProducts","navAbout","navContact"].forEach(k=>document.getElementById(k).textContent=settings[k]);document.getElementById("phoneLink").textContent=settings.phone;document.getElementById("phoneLink").href="tel:"+settings.phone.replace(/\s/g,"");document.getElementById("emailLink").textContent=settings.email;document.getElementById("emailLink").href="mailto:"+settings.email;document.getElementById("whatsappButton").textContent=settings.whatsappText;document.getElementById("whatsappButton").href="https://wa.me/"+settings.whatsapp.replace(/\D/g,"");document.getElementById("topPhone").textContent=settings.phone;document.getElementById("topPhone").href="tel:"+settings.phone.replace(/\s/g,"");document.getElementById("topEmail").textContent=settings.email;document.getElementById("topEmail").href="mailto:"+settings.email;document.getElementById("footerPhone").textContent=settings.phone;document.getElementById("footerPhone").href="tel:"+settings.phone.replace(/\s/g,"");document.getElementById("footerWhatsApp").href="https://wa.me/"+settings.whatsapp.replace(/\D/g,"");document.getElementById("footerEmail").textContent=settings.email;document.getElementById("footerEmail").href="mailto:"+settings.email;document.documentElement.style.setProperty("--navy",settings.theme.navy);document.documentElement.style.setProperty("--blue",settings.theme.blue);document.documentElement.style.setProperty("--gold",settings.theme.gold);document.documentElement.style.setProperty("--light",settings.theme.light);document.documentElement.style.setProperty("--text",settings.theme.text);document.documentElement.style.setProperty("--muted",settings.theme.muted);document.body.classList.remove("design-luxury","design-sport","design-minimal","design-dark");if(settings.theme.design&&settings.theme.design!=="classic")document.body.classList.add("design-"+settings.theme.design);const hero=document.querySelector(".hero");if(settings.theme.backgroundImage){hero.style.backgroundImage=`linear-gradient(90deg,rgba(4,20,40,.82),rgba(7,55,100,.55)),url("${settings.theme.backgroundImage}")`;hero.style.backgroundSize="cover";hero.style.backgroundPosition="center"}else hero.style.backgroundImage=""}
-function promoHTML(p){const content=`<img src="${p.image}" alt="${esc(p.title||"Promotion")}">${p.title?`<span class="promo-label">${esc(p.title)}</span>`:""}`;return p.link?`<a class="promo-inner" href="${esc(p.link)}" target="${p.target||"_blank"}" rel="noopener">${content}</a>`:`<div class="promo-inner">${content}</div>`}
-function renderPromotions(){["top","hero","afterProducts","afterAbout","beforeContact","bottom"].forEach(pos=>{const el=document.getElementById(pos==="top"?"promoTop":pos==="hero"?"promoHero":"promo"+pos.charAt(0).toUpperCase()+pos.slice(1));if(el){el.innerHTML="";el.classList.remove("show");const p=promotions.find(x=>x.enabled&&x.position===pos);if(p){el.innerHTML=promoHTML(p);el.classList.add("show")}}});["floatingTopRight","floatingBottomRight","floatingBottomLeft"].forEach(id=>{const el=document.getElementById(id);el.innerHTML="";el.classList.remove("show");const p=promotions.find(x=>x.enabled&&x.position===id);if(p){el.innerHTML=promoHTML(p)+`<button class="floating-close" onclick="this.parentElement.classList.remove('show')">×</button>`;el.classList.add("show")}})}
-renderProducts();applySettings();renderPromotions();
+function setText(id,v){const e=document.getElementById(id);if(e)e.textContent=v??""}
+function setHref(id,v){const e=document.getElementById(id);if(e)e.href=v}
+
+async function loadSite(){
+  try{
+    const [{data:pd,error:pe},{data:sd,error:se},{data:pr,error:pre}]=await Promise.all([
+      supabaseClient.from("products").select("*").order("id",{ascending:true}),
+      supabaseClient.from("site_settings").select("*").eq("id",1).maybeSingle(),
+      supabaseClient.from("promotions").select("*").order("id",{ascending:true})
+    ]);
+    if(pe)throw pe;if(se)throw se;if(pre)throw pre;
+
+    products=(pd||[]).map(p=>({name:p.name||"",description:p.description||"",price:p.price||"",image:p.image_url||""}));
+
+    if(sd){
+      settings={
+        ...defaults,
+        businessName:sd.business_name??defaults.businessName,tagline:sd.tagline??defaults.tagline,
+        heroBadge:sd.hero_badge??defaults.heroBadge,heroTitle:sd.hero_title??defaults.heroTitle,
+        heroText:sd.hero_text??defaults.heroText,heroButton1:sd.hero_button_1??defaults.heroButton1,
+        heroButton2:sd.hero_button_2??defaults.heroButton2,aboutTitle:sd.about_title??defaults.aboutTitle,
+        aboutText:sd.about_text??defaults.aboutText,whyTitle:sd.why_title??defaults.whyTitle,
+        why1:sd.why_1??defaults.why1,why2:sd.why_2??defaults.why2,why3:sd.why_3??defaults.why3,why4:sd.why_4??defaults.why4,
+        contactTitle:sd.contact_title??defaults.contactTitle,contactIntro:sd.contact_intro??defaults.contactIntro,
+        contactBusiness:sd.contact_business??defaults.contactBusiness,phone:sd.phone??defaults.phone,
+        whatsapp:sd.whatsapp??defaults.whatsapp,email:sd.email??defaults.email,whatsappText:sd.whatsapp_text??defaults.whatsappText,
+        navHome:sd.nav_home??defaults.navHome,navProducts:sd.nav_products??defaults.navProducts,navAbout:sd.nav_about??defaults.navAbout,navContact:sd.nav_contact??defaults.navContact,
+        footer1:sd.footer_1??defaults.footer1,footer2:sd.footer_2??defaults.footer2,footer3:sd.footer_3??defaults.footer3,
+        theme:{navy:sd.navy??defaults.theme.navy,blue:sd.blue??defaults.theme.blue,gold:sd.gold??defaults.theme.gold,
+        light:sd.light??defaults.theme.light,text:sd.text_color??defaults.theme.text,muted:sd.muted??defaults.theme.muted,
+        backgroundImage:sd.background_url??"",logoImage:sd.logo_url??"",design:sd.design??"classic"}
+      };
+    }
+    promotions=(pr||[]).map(p=>({title:p.title||"",link:p.link||"",position:p.position||"top",target:p.target||"_blank",enabled:p.enabled!==false,image:p.image_url||""}));
+    applySettings();renderProducts();renderPromotions();
+  }catch(e){
+    console.error("Supabase error:",e);
+    applySettings();renderProducts();renderPromotions();
+  }
+}
+
+function applySettings(){
+  setText("siteLogoName",settings.businessName);setText("siteTagline",settings.tagline);
+  setText("heroBadge",settings.heroBadge);document.getElementById("heroTitle").innerHTML=settings.heroTitle;
+  setText("heroText",settings.heroText);setText("heroButton1",settings.heroButton1);setText("heroButton2",settings.heroButton2);
+  setText("aboutTitle",settings.aboutTitle);setText("aboutText",settings.aboutText);setText("whyTitle",settings.whyTitle);
+  ["why1","why2","why3","why4"].forEach(k=>setText(k,settings[k]));
+  setText("contactTitle",settings.contactTitle);setText("contactIntro",settings.contactIntro);setText("contactBusiness",settings.contactBusiness);
+  setText("footer1",settings.footer1);setText("footer2",settings.footer2);setText("footer3",settings.footer3);
+  ["navHome","navProducts","navAbout","navContact"].forEach(k=>setText(k,settings[k]));
+  ["footerNavHome","footerNavProducts","footerNavAbout","footerNavContact"].forEach((id,i)=>setText(id,[settings.navHome,settings.navProducts,settings.navAbout,settings.navContact][i]));
+  const phone=(settings.phone||"").replace(/\s/g,""),wa=(settings.whatsapp||"").replace(/\D/g,"");
+  setText("topPhone",settings.phone);setHref("topPhone","tel:"+phone);setText("topEmail",settings.email);setHref("topEmail","mailto:"+settings.email);
+  setText("phoneLink",settings.phone);setHref("phoneLink","tel:"+phone);setText("emailLink",settings.email);setHref("emailLink","mailto:"+settings.email);
+  setText("whatsappButton",settings.whatsappText);setHref("whatsappButton","https://wa.me/"+wa);
+  setText("footerPhone",settings.phone);setHref("footerPhone","tel:"+phone);setHref("footerWhatsApp","https://wa.me/"+wa);setText("footerEmail",settings.email);setHref("footerEmail","mailto:"+settings.email);
+
+  const t=settings.theme||defaults.theme,r=document.documentElement;
+  r.style.setProperty("--navy",t.navy);r.style.setProperty("--blue",t.blue);r.style.setProperty("--gold",t.gold);
+  r.style.setProperty("--light",t.light);r.style.setProperty("--text",t.text);r.style.setProperty("--muted",t.muted);
+  document.body.classList.remove("design-luxury","design-sport","design-minimal","design-dark");
+  if(t.design&&t.design!=="classic")document.body.classList.add("design-"+t.design);
+  const hero=document.querySelector(".hero");
+  if(t.backgroundImage){hero.style.backgroundImage=`linear-gradient(90deg,rgba(4,20,40,.82),rgba(7,55,100,.55)),url("${t.backgroundImage}")`;hero.style.backgroundSize="cover";hero.style.backgroundPosition="center"}else hero.style.backgroundImage="";
+  const logo=document.getElementById("logoMark");
+  if(t.logoImage)logo.innerHTML=`<img src="${esc(t.logoImage)}" alt="${esc(settings.businessName)} logo">`;else logo.textContent="NT";
+}
+
+function renderProducts(){
+  const list=document.getElementById("productList");list.innerHTML="";
+  if(!products.length){list.innerHTML='<p style="grid-column:1/-1;text-align:center;color:var(--muted)">No products available yet.</p>';return}
+  products.forEach(p=>{
+    const card=document.createElement("article");card.className="card";
+    card.innerHTML=p.image?`<img class="product-image" src="${esc(p.image)}" alt="${esc(p.name)}">`:`<div class="no-image">NUMAN TEXTILES</div>`;
+    card.innerHTML+=`<div class="card-body"><h3>${esc(p.name)}</h3><p>${esc(p.description||"Quality textile product.")}</p>${p.price?`<span class="price">${esc(p.price)}</span>`:""}</div>`;
+    list.appendChild(card);
+  });
+}
+
+function promoHTML(p){
+  const c=`<img src="${esc(p.image)}" alt="${esc(p.title||"Promotion")}">${p.title?`<span class="promo-label">${esc(p.title)}</span>`:""}`;
+  return p.link?`<a class="promo-inner" href="${esc(p.link)}" target="${esc(p.target||"_blank")}" rel="noopener">${c}</a>`:`<div class="promo-inner">${c}</div>`;
+}
+function renderPromotions(){
+  ["top","hero","afterProducts","afterAbout","beforeContact","bottom"].forEach(pos=>{
+    const id=pos==="top"?"promoTop":pos==="hero"?"promoHero":"promo"+pos.charAt(0).toUpperCase()+pos.slice(1),el=document.getElementById(id);
+    if(!el)return;el.innerHTML="";el.classList.remove("show");
+    const p=promotions.find(x=>x.enabled&&x.position===pos);if(p){el.innerHTML=promoHTML(p);el.classList.add("show")}
+  });
+  ["floatingTopRight","floatingBottomRight","floatingBottomLeft"].forEach(id=>{
+    const el=document.getElementById(id);el.innerHTML="";el.classList.remove("show");
+    const p=promotions.find(x=>x.enabled&&x.position===id);
+    if(p){el.innerHTML=promoHTML(p)+`<button class="floating-close" onclick="this.parentElement.classList.remove('show')">×</button>`;el.classList.add("show")}
+  });
+}
+loadSite();
 </script>
-</body></html>
+</body>
+</html>
